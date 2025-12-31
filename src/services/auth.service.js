@@ -20,3 +20,9 @@ exports.loginUser = async (email, password) => {
 
   return user;
 };
+
+exports.getUserById = async (id) => {
+  const user = await User.findById(id).select('-password').lean();
+  if (!user) throw new Error('User not found');
+  return user;
+};

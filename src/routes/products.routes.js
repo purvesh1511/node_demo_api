@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const products = require('../controllers/products.controller');
-const { authenticate } = require('../middlewares/auth.middleware');
+const authenticate = require('../middlewares/auth.middleware');
 const upload = require('../middlewares/upload.middleware'); // handle multipart/form-data
 
 // public read endpoints

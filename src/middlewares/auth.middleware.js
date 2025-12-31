@@ -1,20 +1,23 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
-const { successResponse, errorResponse } = require('../utils/apiResponse');
+module.exports = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
 
-function authenticate(req, res, next) {
-    const authHeader = req.headers.authorization || '';
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    if (!token) return errorResponse(res, 'No token provided', 401);
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token missing'
+    });
+  }
 
-    try {
-        const payload = jwt.verify(token, JWT_SECRET);
-        req.user = payload; // attach decoded token (e.g. { id, email, ... })
-        next();
-    } catch (err) {
-        return errorResponse(res, 'Invalid token', 401);
-    }
-}
-
-module.exports = { authenticate };
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id };
+    next();
+  } catch (err) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token'
+    });
+  }
+};

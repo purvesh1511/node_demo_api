@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const categories = require('../controllers/categories.controller');
-const { authenticate } = require('../middlewares/auth.middleware');
+const authenticate = require('../middlewares/auth.middleware');
 
 // public reads
 router.get('/', categories.listCategories);

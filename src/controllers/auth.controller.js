@@ -29,3 +29,20 @@ exports.login = async (req, res) => {
     return errorResponse(res, err.message, 401);
   }
 };
+
+exports.getMe = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return errorResponse(res, 'Unauthorized', 401);
+    }
+
+    const user = await authService.getUserById(req.user.id);
+    if (!user) {
+      return errorResponse(res, 'User not found', 404);
+    }
+
+    return successResponse(res, { user });
+  } catch (err) {
+    return errorResponse(res, err.message, 500);
+  }
+};
